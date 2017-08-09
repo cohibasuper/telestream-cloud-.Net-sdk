@@ -228,13 +228,14 @@ namespace Telestream.Cloud.SDK
 			var request = _requestFactory.PutJson(string.Format("factories/{0}.json", factoryId), new { outputs_path_format = newOutputsPathFormat }, null);
 			return _client.Invoke<Factory>(request);
 		}
-               public Task<UploadSession> StartUpload(string factoryId, long fileSize, string fileName, CancellationToken cancelToken = default(CancellationToken))
+    public Task<UploadSession> StartUpload(string factoryId, long fileSize, string fileName, CancellationToken cancelToken = default(CancellationToken))
                {
-                       return StartUpload(factoryId, fileSize, fileName, null, null, cancelToken);
+                       return StartUpload(factoryId, fileSize, fileName, null, null, null, cancelToken);
                }
 
                public Task<UploadSession> StartUpload(string factoryId, long fileSize, string fileName, string pathFormat,
-                                                      Dictionary<string, string> extraVars, CancellationToken cancelToken = default(CancellationToken))
+                                                      Dictionary<string, string> extraVars, string profiles = null,
+                                                      CancellationToken cancelToken = default(CancellationToken))
                {
                        var data = new Dictionary<string, object>();
                        data["file_name"] = fileName;
@@ -242,6 +243,7 @@ namespace Telestream.Cloud.SDK
                        data["multi_chunk"] = true;
                        data["path_format"] = pathFormat;
                        data["extra_variables"] = extraVars;
+                       data["profiles"] = profiles;
 
                        var request = _requestFactory.Post(
                                "videos/upload.json",
@@ -249,5 +251,5 @@ namespace Telestream.Cloud.SDK
 
                        return _client.Invoke<UploadSession>(request, cancelToken);
                }
-	}
+        }               
 }
